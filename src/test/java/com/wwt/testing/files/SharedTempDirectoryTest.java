@@ -39,7 +39,7 @@ class SharedTempDirectoryTest {
     @Order(1)
     void verifyPreviouslyCreatedFileAvailable() throws IOException {
         Path destination = sharedTempDir.resolve("test.txt");
-
+        
         // Note the file already exists, since we are using a shared static value.
         logger.info("Reading from {}", destination);
         assertTrue(Files.exists(destination));

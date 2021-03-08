@@ -41,7 +41,7 @@ class TextFileTransformerTest {
 
     @Test
     @DisplayName("Should overwrite existing destination")
-    void shouldNotOverwriteExistingDestination(@TempDir Path tempDir) throws IOException {
+    void shouldOverwriteExistingDestination(@TempDir Path tempDir) throws IOException {
         Path destination = tempDir.resolve("destination.txt");
         Path source = tempDir.resolve("source.txt");
         Files.write(source, List.of("Larry", "Curly", "Moe"));
