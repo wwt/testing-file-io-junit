@@ -103,9 +103,9 @@ public class TextFileTransformer {
     }
 
     public void transform(Path source, Path destination) throws IOException {
-        try (Stream<String> lines = Files.lines(source);
-             BufferedWriter writer = Files.newBufferedWriter(destination);
-             PrintWriter printWriter = new PrintWriter(writer)) {
+        try (var lines = Files.lines(source);
+             var writer = Files.newBufferedWriter(destination);
+             var printWriter = new PrintWriter(writer)) {
 
             lines
                 .map(lineTransformer)
