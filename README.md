@@ -33,9 +33,8 @@ To start driving out our desired functionality, we'll write a failing test. Firs
 the class under test.
 
 We have a few options for the line transformation function; to keep things simple, we can use 
-a method reference to fulfill the required `Function<String, String>`. 
-
-Making the input uppercase will be sufficient to verify the transformation is applied.
+a method reference to fulfill the required `Function<String, String>`. Making the input uppercase will be sufficient to 
+verify the transformation is applied.
 
 ```java
 package com.wwt.testing.files;
@@ -134,9 +133,9 @@ If you'd like to see how these tests are implemented, visit the [GitHub](https:/
 JUnit4's @Rules should be avoided whenever possible, as JUnit5 has adopted an extension based approach to replace rules.
 
 That said, if your team has some technical reason to stay on JUnit4, you're in luck too. JUnit4 comes bundled with
-the `TemporaryFolder` rule, which can manage temporary files for you
+the `TemporaryFolder` rule, which can manage temporary files for you.
 
-To use the rule, declare a public field of type `TemporaryFolder`, annotated with `@Rule`. Use that field
+To use the rule, declare a field that is a new instance of `TemporaryFolder` annotated with `@Rule`. Use that field
 to create folders or files as necessary. These files will be tracked and removed after each test completes.
 
 ```java
