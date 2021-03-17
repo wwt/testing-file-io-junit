@@ -135,7 +135,7 @@ JUnit4's @Rules should be avoided whenever possible, as JUnit5 has adopted an ex
 That said, if your team has some technical reason to stay on JUnit4, you're in luck too. JUnit4 comes bundled with
 the `TemporaryFolder` rule, which can manage temporary files for you.
 
-To use the rule, declare a field that is a new instance of `TemporaryFolder` annotated with `@Rule`. Use that field
+To use the rule, declare a public field that is a new instance of `TemporaryFolder` annotated with `@Rule`. Use that field
 to create folders or files as necessary. These files will be tracked and removed after each test completes.
 
 ```java
