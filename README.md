@@ -29,7 +29,7 @@ case for writing some tests!
 ### Test Time
 
 First we'll create `TextFileTransformerTest`, and configure an instance of the class under test. To verify the 
-transformation is applied, we can just uppercase the input. That should be straightforward to test.
+transformation is applied, we can just upper-case the input.
 
 ```java
 package com.wwt.testing.files;
