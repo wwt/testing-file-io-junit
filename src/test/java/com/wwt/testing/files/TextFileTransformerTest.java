@@ -53,14 +53,41 @@ class TextFileTransformerTest {
     }
 
     @Test
-    @DisplayName("Source must be regular file.")
-    void sourceMustBeRegularFile(@TempDir Path tempDir) {
+    @DisplayName("Source cannot be directory.")
+    void sourceCannotBeDirectory(@TempDir Path tempDir) {
         Path destination = tempDir.resolve("should-not-create.txt");
 
         assertThrows(IllegalArgumentException.class, () ->
             testObject.transform(tempDir, destination)
         );
         assertFalse(Files.exists(destination));
+    }
+
+
+    @Test
+    @DisplayName("Source file must exist")
+    void sourceMustExist(@TempDir Path tempDir) {
+        Path destination = tempDir.resolve("destination.txt");
+        Path source = tempDir.resolve("source.txt");
+
+        assertThrows(IllegalArgumentException.class, () ->
+            testObject.transform(source, destination)
+        );
+    }
+
+    @Test
+    @DisplayName("Source must be readable")
+    void sourceMustBeReadable(@TempDir Path tempDir) throws IOException {
+        Path destination = tempDir.resolve("destination.txt");
+        Path source = tempDir.resolve("source.txt");
+        Files.write(source, List.of("We", "Will", "Never", "Know"));
+        ;
+        assertAll(
+            () -> assertTrue(source.toFile().setReadable(false)),
+            () -> assertThrows(IllegalArgumentException.class, () ->
+                testObject.transform(source, destination)
+            )
+        );
     }
 
     @Test

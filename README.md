@@ -1,14 +1,10 @@
-## Testing File IO with JUnit
+### What we are Building Today
 
-The complete source is available on [GitHub](https://github.com/wwt/testing-file-io-junit)
+I want to create a simple Java class that reads an input file, applies a transformation, and writes the result to an 
+output file.
 
-### Problem
-
-We have been tasked with writing a Java class that reads in a text file line-by-line, applies a function to each read line,
-and writes the result to a destination file.
-
-Since we have a general idea of the interface we are trying to fulfill, we'll start by defining an empty implementation
-of the class under test.
+The class requires a transformation function that will be invoked on each line to create the output file. Something like
+this in Java:
 ```java
 package com.wwt.testing.files;
 
@@ -27,14 +23,13 @@ public class TextFileTransformer {
 }
 ```
 
-### Let's write some tests!
+We want to make sure our implementation works, and provide examples of how the class should be used. Seems like good
+case for writing some tests!
 
-To start driving out our desired functionality, we'll write a failing test. First, we'll need an instance of
-the class under test.
+### Test Time
 
-We have a few options for the line transformation function; to keep things simple, we can use 
-a method reference to fulfill the required `Function<String, String>`. Making the input uppercase will be sufficient to 
-verify the transformation is applied.
+First we'll create `TextFileTransformerTest`, and configure an instance of the class under test. To verify the 
+transformation is applied, we can just uppercase the input. That should be straightforward to test.
 
 ```java
 package com.wwt.testing.files;
@@ -44,15 +39,12 @@ class TextFileTransformerTest {
 }
 ```
 
-Our first goal is processing a single line file. We want to use a real file rather than a mock 
-because we want to ensure it actually works against real input, and we do not want to spend the rest of the 
-day emulating the internals of `Path` with a mocking framework.
+Now that we have a test instance to use, let's try to process a single line file. For this test, I want to write 
+a string out to an input file, provide it to the class under test, and then delete the file when the test completes. 
+We _could_ remove the file ourselves in a `try/finally` block, but there must be a cleaner way!
 
-To fill out the input file's contents, we can use `Files.write(path, stringBytes)`. Once test execution completes, this 
-temporary file should be deleted. We _could_ remove the file manually in a `try/finally` block, but there must be a better way!
-
-Let's try out JUnit5's `@TempDir` annotation instead. When you annotate a `File` or `Path` parameter with `@TempDir`, 
-JUnit5 will supply a temporary directory which is recursively deleted when the test method completes. 
+Let's try out JUnit5's _experimental_ `@TempDir` annotation. When you annotate a `File` or `Path` parameter with `@TempDir`, 
+JUnit5 will supply a temporary directory that is recursively deleted when the test method completes. 
 
 ```java
 @Test
@@ -68,10 +60,10 @@ void transformsSingleLineFile(@TempDir Path tempDir) throws IOException {
 }
 ```
 
-The first line of our test resolves a non-existent file called "destination.txt" against the temporary
+The first line of our test resolves a non-existent file called `destination.txt` against the temporary
 directory. This is where our results will be written.
 
-The next lines set up our source file. Similarly, we resolve a file named "source.txt", and write "Hello World!" as its 
+The next lines set up our source file. Similarly, we resolve a file named `source.txt`, and write "Hello World!" as its 
 contents.
 
 Now that the test is set up, we invoke the class under test by providing the source and destination files. Remember: our 
@@ -123,17 +115,14 @@ wrong:
 - What happens when the source file is not readable?
 - What happens when I provide a directory as the destination?
 
-For the sake of this little program, I decided when possible we should fail fast when possible with
-an `IllegalArgumentException`; otherwise, if something exceptional happens, let the IOException be thrown.
-
-If you'd like to see how these tests are implemented, visit the [GitHub](https://github.com/wwt/testing-file-io-junit) repository.
+If you'd like to see how these tests are implemented, visit the [GitHub](https://github.com/wwt/testing-file-io-junit/blob/8fd893daef907e33933dbd60a5e59eef25c6448b/src/test/java/com/wwt/testing/files/TextFileTransformerTest.java) repository.
 
 ### Help! I'm stuck on JUnit4!
 
-JUnit4's @Rules should be avoided whenever possible, as JUnit5 has adopted an extension based approach to replace rules.
+JUnit4's `@Rules` should be avoided whenever possible, as JUnit5 has adopted an extension based approach to replace rules.
 
-That said, if your team has some technical reason to stay on JUnit4, you're in luck too. JUnit4 comes bundled with
-the `TemporaryFolder` rule, which can manage temporary files for you.
+That said, if your team has some technical reason to stay on JUnit4, you are in luck too. JUnit4 comes bundled with
+the `TemporaryFolder` rule, which can also clean up temporary files for you.
 
 To use the rule, declare a public field that is a new instance of `TemporaryFolder` annotated with `@Rule`. Use that field
 to create folders or files as necessary. These files will be tracked and removed after each test completes.
@@ -177,49 +166,7 @@ and resolve your test data file.
   }
 ```
 
-### Other Options
-
-#### Jimfs - An Emulated In-Memory Filesystem
-
-If we want more granular control over the type of FileSystem or desire an in-memory system, Jimfs is a great option.
-
-```java
-public class JimfsBasedTest {
-    private Path rootPath;
-    private FileSystem fileSystem;
-
-    private final TextFileTransformer testObject = new TextFileTransformer(String::toUpperCase);
-
-    @BeforeEach
-    void setup() throws IOException {
-        fileSystem = Jimfs.newFileSystem(Configuration.unix());
-        rootPath = fileSystem.getPath("/test");
-        Files.createDirectory(rootPath);
-    }
-
-    @AfterEach
-    void teardown() throws IOException {
-        fileSystem.close();
-    }
-
-    @Test
-    void testWithFakeFilesystem() throws IOException {
-        Path source = rootPath.resolve("source.txt");
-        Path destination = rootPath.resolve("destination.txt");
-        Files.write(source, List.of("larry", "curly", "moe"));
-
-        testObject.transform(source, destination);
-
-        assertEquals(List.of("LARRY", "CURLY", "MOE"), Files.readAllLines(destination));
-    }
-}
-```
-
-Any files created in the Jimfs `FileSystem` will be removed when the fileSystem is closed, or the JVM terminates. Note
-the teardown method that closes the filesystem, so we don't maintain state between our tests.
-
-
-### TLDR
+### TL;DR
 
 When you're testing file IO with JUnit, prefer using real files. Use JUnit's TemporaryDirectory support to manage your
 files, so you don't have to. If you really don't want to use the filesystem, consider a solution like Jimfs. 
@@ -228,3 +175,4 @@ files, so you don't have to. If you really don't want to use the filesystem, con
 - [JUnit5 User Guide, re: @TempDir](https://junit.org/junit5/docs/current/user-guide/#writing-tests-built-in-extensions-TempDirectory)
 - [JUnit4 @TemporaryFolder Rule](https://junit.org/junit4/javadoc/4.13/org/junit/rules/TemporaryFolder.html)
 - [GitHub Source for this Article](https://github.com/wwt/testing-file-io-junit)
+- [Jimfs - In Memory Filesystem](https://github.com/google/jimfs)
