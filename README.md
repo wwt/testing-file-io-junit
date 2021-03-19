@@ -166,13 +166,9 @@ and resolve your test data file.
   }
 ```
 
-### TL;DR
-
-When you're testing file IO with JUnit, prefer using real files. Use JUnit's TemporaryDirectory support to manage your
-files, so you don't have to. If you really don't want to use the filesystem, consider a solution like Jimfs. 
-
 ### Additional Resources
-- [JUnit5 User Guide, re: @TempDir](https://junit.org/junit5/docs/current/user-guide/#writing-tests-built-in-extensions-TempDirectory)
+- [JUnit5 User Guide](https://junit.org/junit5/docs/current/user-guide/#writing-tests-built-in-extensions-TempDirectory)
+- [JUnit5 @TempDir](https://junit.org/junit5/docs/current/api/org.junit.jupiter.api/org/junit/jupiter/api/io/TempDir.html)
 - [JUnit4 @TemporaryFolder Rule](https://junit.org/junit4/javadoc/4.13/org/junit/rules/TemporaryFolder.html)
 - [GitHub Source for this Article](https://github.com/wwt/testing-file-io-junit)
 - [Jimfs - In Memory Filesystem](https://github.com/google/jimfs)
