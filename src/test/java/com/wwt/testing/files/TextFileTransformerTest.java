@@ -81,7 +81,7 @@ class TextFileTransformerTest {
         Path destination = tempDir.resolve("destination.txt");
         Path source = tempDir.resolve("source.txt");
         Files.write(source, List.of("We", "Will", "Never", "Know"));
-        ;
+
         assertAll(
             () -> assertTrue(source.toFile().setReadable(false)),
             () -> assertThrows(IllegalArgumentException.class, () ->
