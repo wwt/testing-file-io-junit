@@ -40,7 +40,7 @@ class TextFileTransformerTest {
 ```
 
 Now that we have a test instance to use, let's try to process a single line file. For this test, I want to write 
-a string out to an input file, provide it to the class under test, and then delete the file when the test completes. 
+a string to an input file, provide it to the class under test, and then delete the file when the test completes. 
 We _could_ remove the file ourselves in a `try/finally` block, but there must be a cleaner way!
 
 Let's try out JUnit5's _experimental_ `@TempDir` annotation. When you annotate a `File` or `Path` parameter with `@TempDir`, 
