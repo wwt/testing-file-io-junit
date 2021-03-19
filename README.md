@@ -115,7 +115,7 @@ wrong:
 - What happens when the source file is not readable?
 - What happens when I provide a directory as the destination?
 
-If you'd like to see how these tests are implemented, visit the [GitHub](https://github.com/wwt/testing-file-io-junit/blob/8fd893daef907e33933dbd60a5e59eef25c6448b/src/test/java/com/wwt/testing/files/TextFileTransformerTest.java) repository.
+If you'd like to see how these tests are implemented, visit the [GitHub](https://github.com/wwt/testing-file-io-junit/blob/main/src/test/java/com/wwt/testing/files/TextFileTransformerTest.java) repository.
 
 ### Help! I'm stuck on JUnit4!
 
