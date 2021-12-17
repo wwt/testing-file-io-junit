@@ -12,9 +12,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class JimfsBasedTest {
+class JimfsBasedTest {
     private Path rootPath;
     private FileSystem fileSystem;
 
@@ -34,12 +35,12 @@ public class JimfsBasedTest {
 
     @Test
     void testWithFakeFilesystem() throws IOException {
-        Path source = rootPath.resolve("source.txt");
-        Path destination = rootPath.resolve("destination.txt");
+        var source = rootPath.resolve("source.txt");
+        var destination = rootPath.resolve("destination.txt");
         Files.write(source, List.of("larry", "curly", "moe"));
 
         testObject.transform(source, destination);
 
-        assertEquals(List.of("LARRY", "CURLY", "MOE"), Files.readAllLines(destination));
+        assertThat(Files.readAllLines(destination)).containsExactly("LARRY", "CURLY", "MOE");
     }
 }

@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 
 import static com.wwt.testing.files.Preconditions.checkArgument;
 import static java.util.function.Predicate.not;
@@ -13,9 +14,9 @@ import static java.util.function.Predicate.not;
 public class TextFileTransformer {
     private static final Predicate<Path> isRegularFile = Files::isRegularFile;
     private static final Predicate<Path> isReadable = Files::isReadable;
-    private final Function<String, String> lineTransformer;
+    private final UnaryOperator<String> lineTransformer;
 
-    public TextFileTransformer(Function<String, String> lineTransformer) {
+    public TextFileTransformer(UnaryOperator<String> lineTransformer) {
         this.lineTransformer = lineTransformer;
     }
 

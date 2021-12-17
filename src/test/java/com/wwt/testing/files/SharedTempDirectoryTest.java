@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -27,22 +28,23 @@ class SharedTempDirectoryTest {
     @Test
     @Order(0)
     void writeContentsToSharedFile() throws IOException {
-        Path destination = sharedTempDir.resolve("test.txt");
+        var destination = sharedTempDir.resolve("test.txt");
         logger.info("Writing to {}", destination);
 
         Files.write(destination, STOOGES);
 
-        assertEquals(STOOGES, Files.readAllLines(destination));
+       assertThat(Files.readAllLines(destination)).containsExactlyElementsOf(STOOGES);
     }
 
     @Test
     @Order(1)
     void verifyPreviouslyCreatedFileAvailable() throws IOException {
-        Path destination = sharedTempDir.resolve("test.txt");
+        var destination = sharedTempDir.resolve("test.txt");
         
         // Note the file already exists, since we are using a shared static value.
         logger.info("Reading from {}", destination);
-        assertTrue(Files.exists(destination));
-        assertEquals(STOOGES, Files.readAllLines(destination));
+
+        assertThat(destination).exists();
+        assertThat(Files.readAllLines(destination)).containsExactlyElementsOf(STOOGES);
     }
 }

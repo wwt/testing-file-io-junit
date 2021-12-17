@@ -11,19 +11,23 @@ repositories {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(16)
+        languageVersion = JavaLanguageVersion.of(17)
     }
 }
 
 dependencies {
-    implementation 'ch.qos.logback:logback-classic:1.2.3'
+    implementation 'ch.qos.logback:logback-classic:1.2.8'
 
-    testImplementation(platform('org.junit:junit-bom:5.7.1'))
+    testImplementation("org.assertj:assertj-core:3.21.0")
+    testImplementation(platform('org.junit:junit-bom:5.8.2'))
     testImplementation('org.junit.jupiter:junit-jupiter')
     testImplementation('com.google.jimfs:jimfs:1.2')
+
     // The following dependencies are included to demonstrate LEGACY JUnit4 @Rule's
     // Do not include unless you are stuck on JUnit4!
-    testImplementation("org.junit.jupiter:junit-jupiter-migrationsupport")
+    testImplementation("org.junit.jupiter:junit-jupiter-migrationsupport") {
+        because 'Provide support for conditional test execution features of JUnit 4 within Jupiter.'
+    }
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine") {
         because 'Allows JUnit4 tests to run'
     }
